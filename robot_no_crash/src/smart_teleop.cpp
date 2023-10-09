@@ -65,8 +65,6 @@ int main(int argc, char* argv[]) {
     
     while (ros::ok()) {
         n.getParamCached("wall_dist", wall_dist);
-        ROS_INFO("wall_dist param: %2.2f", wall_dist);
-
         ros::spinOnce();
         rate.sleep();
     }
