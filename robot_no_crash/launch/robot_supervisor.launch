@@ -1,0 +1,3 @@
+<launch>
+	<node name="smart_teleop" type="smart_teleop" pkg="robot_no_crash" />
+</launch>
