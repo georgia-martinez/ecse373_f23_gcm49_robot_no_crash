@@ -1,7 +1,7 @@
 <launch>
 	<arg name="robot_ns" default="robot0" />
 
-	<include file="$(find stdr_launchers)/launch/server_with_map_and_gui_plus_robot.launch" />
+	<include file="$(find stdr_launchers)/launch/server_with_map_and_gui.launch" />
 	<include file="$(find robot_no_crash)/launch/robot_supervisor.launch" ns="$(arg robot_ns)" />
 	
 	<node name="rqt_gui" type="rqt_gui" pkg="rqt_gui" />

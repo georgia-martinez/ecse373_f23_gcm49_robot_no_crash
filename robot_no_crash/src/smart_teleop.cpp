@@ -6,8 +6,9 @@
 ros::Publisher cmd_vel_pub;
 
 sensor_msgs::LaserScan lidar_msg;
-geometry_msgs::Twist des_vel_msg;
 geometry_msgs::Twist new_vel_msg;
+
+double wall_dist;
 
 void lidarCallback(const sensor_msgs::LaserScan msg) {
 	lidar_msg = msg;
@@ -24,21 +25,20 @@ void velocityCallback(const geometry_msgs::Twist msg) {
 	if (x_pos > 0) {
 	
 		// Check the lasers in front of the robot
-		int middle_index = lidar_msg.ranges.size() / 2;
+		int middle_index = lidar_msg.ranges.size() / 2;		
 		int start = middle_index - RANGE;
 		int end = middle_index + RANGE;
 		
 		float min_dist = lidar_msg.ranges[start]; // minimum distance from wall
 		
 		for (int i = start; i < end; i++) {
-
 			if (min_dist > lidar_msg.ranges[i]) {
 				min_dist = lidar_msg.ranges[i];
 			}
 		}
 		
 		// If wall is nearby, rotate robot to not face wall
-		if (min_dist < 1) {
+		if (min_dist < wall_dist) {
 			new_vel_msg.linear.x = 0;
 			new_vel_msg.angular.z = 0.5;
 		} else {
@@ -50,15 +50,26 @@ void velocityCallback(const geometry_msgs::Twist msg) {
 }
 
 int main(int argc, char* argv[]) {
-	ros::init(argc, argv, "lab4");
+	ROS_INFO("Starting smart teleoperation");
+	ros::init(argc, argv, "smart_teleop");
 	
 	ros::NodeHandle n;
+	
   	cmd_vel_pub = n.advertise<geometry_msgs::Twist>("cmd_vel", 1000);
 
-  	ros::Subscriber laser_sub = n.subscribe("laser1", 1000, lidarCallback);  	
+  	ros::Subscriber laser_sub = n.subscribe("laser_1", 1000, lidarCallback);  	
   	ros::Subscriber des_vel_sub = n.subscribe("des_vel", 1000, velocityCallback);
   	
-  	ros::spin();
+	// Loop to check the wall_dist param
+    ros::Rate rate(1);
+    
+    while (ros::ok()) {
+        n.getParamCached("wall_dist", wall_dist);
+        ROS_INFO("wall_dist param: %2.2f", wall_dist);
 
-	return 0;
+        ros::spinOnce();
+        rate.sleep();
+    }
+
+	return 0;	
 }

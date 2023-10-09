@@ -1,3 +1,4 @@
 <launch>
-    <node name="smart_teleop" type="smart_teleop" pkg="robot_no_crash" />
+    <node name="smart_teleop" type="smart_teleop" pkg="robot_no_crash" output="screen"/>
+    <param name="wall_dist" value="1.0" type="double" />
 </launch>
