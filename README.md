@@ -8,7 +8,7 @@ Run the smart_teleop node with stdr_launchers and rqt_gui:
 
 `roslaunch robot_no_crash lab4.launch`
 
-With lab4.launch, the optional param `robot_ns` can be set to change the robot namespace (default is robot0). 
+With the second launch method, the optional param `robot_ns` can be set to change the robot namespace (default is robot0). 
 
 When the node is running, you can update the `wall_dist` param to change how sensitive the wall detection is by running the following (default is 1):
 
